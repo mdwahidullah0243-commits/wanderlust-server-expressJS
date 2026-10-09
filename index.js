@@ -40,7 +40,7 @@ const verifyToken = async (req, res, next) => {
         next();
 
     } catch (error) {
-        return res.status(403).json({message: 'Token validation failed'});
+        return res.status(403).json({ message: 'Token validation failed' });
     };
 };
 
@@ -52,6 +52,13 @@ const connectToMongoDB = async () => {
         const database = client.db('wanderlust');
         const destinationCollection = database.collection('destinations');
         const bookingsCollection = database.collection('bookings');
+
+        app.get('/features', async (req, res) => {
+            const cursor = destinationCollection.find({}).limit(6);
+            const result = await cursor.toArray();
+
+            res.send(result);
+        });
 
         app.get('/destinations', async (req, res) => {
             const cursor = destinationCollection.find({});
